@@ -5,6 +5,8 @@ const zodObject = z.object({
     .enum(['development', 'production', 'test'])
     .default('development'),
   PORT: z.string().default('5000'),
+  API_PREFIX: z.string(),
+  DATABASE_URL: z.string(),
 });
 
 export type EnvConfig = z.infer<typeof zodObject>;

@@ -6,15 +6,19 @@ import { PostsModule } from './posts/posts.module';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import appConfig from './config/app.config';
+import { PrismaModule } from './database/prisma.module';
 
 @Module({
-  imports: [UsersModule, PostsModule,
+  imports: [
+    UsersModule,
+    PostsModule,
+    PrismaModule,
     ConfigModule.forRoot({
-      isGlobal : true,
+      isGlobal: true,
       validate,
       envFilePath: ['.env', `.env.${process.env.NODE_ENV || 'development'}`],
-      load : [appConfig]
-    })
+      load: [appConfig],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

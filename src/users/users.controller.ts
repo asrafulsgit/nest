@@ -18,13 +18,13 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.createUser(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.createUser(createUserDto);
   }
 
   @Get()
-  getAllUsers() {
-    return this.usersService.getUsers();
+  async getAllUsers() {
+    return await this.usersService.getUsers();
   }
 
   @Get(':id')

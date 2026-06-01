@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from '../database/prisma.service';
 
 type UserRole = 'admin' | 'user' | 'moderator';
 
@@ -16,6 +17,7 @@ export interface User {
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly prismaService: PrismaService) {}
   users: User[] = [
     {
       id: 1,
@@ -55,11 +57,15 @@ export class UsersService {
     },
   ];
 
-  createUser(user: CreateUserDto) {
-    return user;
+  async createUser(user: CreateUserDto) {
+    const newUser = await this.prismaService.user.create({
+      data: user,
+    });
+    return newUser;
   }
-  getUsers() {
-    return this.users;
+
+  async getUsers() {
+    return await this.prismaService.user.findMany();
   }
 
   getSingleUser(id: number) {
@@ -68,11 +74,11 @@ export class UsersService {
 
   updateUser(id: number, data: UpdateUserDto) {
     const user = this.users.find((u) => u.id === id);
-    if(!user){
+    if (!user) {
       return new NotFoundException({
-        success : false,
-        message : "User not found"
-      })
+        success: false,
+        message: 'User not found',
+      });
     }
     return {
       ...user,

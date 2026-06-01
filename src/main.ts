@@ -5,7 +5,10 @@ import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('/api/v1');
+  const config = app.get(ConfigService);
+  const port = config.get<number>('app.port');
+  const apiPrefix = config.get<string>('app.apiPrefix');
+  app.setGlobalPrefix(apiPrefix || "/api/v1");
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -26,8 +29,7 @@ async function bootstrap() {
       },
     }),
   );
-  const config = app.get(ConfigService);
-  console.log(config.get('app.port'))
-  await app.listen(process.env.PORT ?? 3000);
+  
+  await app.listen(port || 5000);
 }
 bootstrap();
