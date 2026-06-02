@@ -7,6 +7,7 @@ const zodObject = z.object({
   PORT: z.string().default('5000'),
   API_PREFIX: z.string(),
   DATABASE_URL: z.string(),
+  // ACCESS_TOKEN_SECRET: z.string(),
 });
 
 export type EnvConfig = z.infer<typeof zodObject>;

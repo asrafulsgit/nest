@@ -15,6 +15,16 @@ export interface User {
   createdAt: string;
 }
 
+const userSelectedField = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true,
+};
+
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -57,19 +67,24 @@ export class UsersService {
     },
   ];
 
-  async createUser(user: CreateUserDto) {
-    const newUser = await this.prismaService.user.create({
-      data: user,
+  async createUser(data: CreateUserDto) {
+    return await this.prismaService.user.create({
+      data,
+      select: userSelectedField,
     });
-    return newUser;
   }
 
   async getUsers() {
-    return await this.prismaService.user.findMany();
+    return await this.prismaService.user.findMany({
+      select: userSelectedField,
+    });
   }
 
-  getSingleUser(id: number) {
-    return this.users.find((u) => u.id === id);
+  async getSingleUser(id: string) {
+    return await this.prismaService.user.findUniqueOrThrow({
+      where: { id },
+      select: userSelectedField,
+    });
   }
 
   updateUser(id: number, data: UpdateUserDto) {

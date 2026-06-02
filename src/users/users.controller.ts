@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
   ValidationPipe,
 } from '@nestjs/common';
-import { User, UsersService } from './users.service';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -28,14 +28,17 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  getSingleUser(@Param('id') id: string) {
     return this.usersService.getSingleUser(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.updateUser(id, updateUserDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ) {
+  //   return this.usersService.updateUser(id, updateUserDto);
+  // }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {
