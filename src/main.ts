@@ -8,12 +8,15 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   const port = config.get<number>('app.port');
   const apiPrefix = config.get<string>('app.apiPrefix');
-  app.setGlobalPrefix(apiPrefix || "/api/v1");
+  app.setGlobalPrefix(apiPrefix || '/api/v1');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
       stopAtFirstError: true,
       exceptionFactory: (errors) => {
         const formattedErrors = errors.map((error) => ({
@@ -29,7 +32,7 @@ async function bootstrap() {
       },
     }),
   );
-  
+
   await app.listen(port || 5000);
 }
 bootstrap();
