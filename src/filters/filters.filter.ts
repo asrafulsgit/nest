@@ -10,12 +10,18 @@ import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 
+type ErrorType = {
+  field?: string;
+  message?: string;
+}[];
+
 type ResponseType = {
   status: boolean;
   timestamp: string;
   path: string | undefined;
   code?: string;
   message: string;
+  errors?: ErrorType;
 };
 
 @Catch()
@@ -28,12 +34,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    console.log(exception)
     let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let timestamp: string = new Date().toLocaleString();
     let path: string = httpAdapter.getRequestUrl(ctx.getRequest());
     let message: string = 'Internal server error';
-
+    let errors: ErrorType | undefined = undefined;
     // Handle HttpException errors
     if (exception instanceof HttpException) {
       httpStatus = exception.getStatus();
@@ -42,6 +47,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         typeof exceptionResponse === 'string'
           ? exceptionResponse
           : (exceptionResponse as any).message;
+      if (
+        typeof exceptionResponse === 'object' &&
+        (exceptionResponse as any).code === 'VALIDATION_ERROR'
+      ) {
+        errors = (exceptionResponse as any).errors;
+      }
     }
 
     // Handle PrismaClientKnownRequestError errors
@@ -72,6 +83,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
           ? path
           : undefined,
       message,
+      errors,
     };
 
     // Send the final response

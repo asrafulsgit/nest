@@ -34,11 +34,15 @@ export class AuthService {
   }
 
   async loginUser(data: LoginDto) {
-    const user = await this.prismaService.user.findUniqueOrThrow({
+    const user = await this.prismaService.user.findUnique({
       where: {
         email: data.email,
       },
     });
+
+    if(!user){
+      throw new BadRequestException('Incorrect Creadentials');
+    }
 
     const isCorrectPassword = await this.hashPasswordProvider.comparePassword(
       data.password,
@@ -46,7 +50,7 @@ export class AuthService {
     );
 
     if (!isCorrectPassword) {
-      throw new BadRequestException('Creadentials are incorrect');
+      throw new BadRequestException('Incorrect Creadentials');
     }
     return user;
   }

@@ -25,9 +25,8 @@ async function bootstrap() {
         }));
 
         return new BadRequestException({
-          success: false,
-          message: 'Validation Failed',
           errors: formattedErrors,
+          code: 'VALIDATION_ERROR',
         });
       },
     }),
