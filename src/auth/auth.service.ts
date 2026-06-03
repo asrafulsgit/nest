@@ -3,6 +3,8 @@ import { SingupDto } from './dto/signup.dto';
 import { PrismaService } from '../database/prisma.service';
 import { HashProvider } from './provider/hash.provider';
 import { LoginDto } from './dto/login.dto';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 const userSelectedField = {
   id: true,
@@ -19,6 +21,8 @@ export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly hashPasswordProvider: HashProvider,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
   async createUser(data: SingupDto) {
     const hashedPassword = await this.hashPasswordProvider.hashPassword(
@@ -40,7 +44,7 @@ export class AuthService {
       },
     });
 
-    if(!user){
+    if (!user) {
       throw new BadRequestException('Incorrect Creadentials');
     }
 
@@ -52,6 +56,18 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new BadRequestException('Incorrect Creadentials');
     }
-    return user;
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('app.jwtAccessTokenSercret'),
+      expiresIn: this.configService.get<number>('app.jwtAccessTokenExpires'),
+    });
+
+    return token;
   }
 }

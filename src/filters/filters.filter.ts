@@ -39,6 +39,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let path: string = httpAdapter.getRequestUrl(ctx.getRequest());
     let message: string = 'Internal server error';
     let errors: ErrorType | undefined = undefined;
+
+    console.log(exception)
+
     // Handle HttpException errors
     if (exception instanceof HttpException) {
       httpStatus = exception.getStatus();
