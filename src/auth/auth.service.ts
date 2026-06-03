@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SingupDto } from './dto/signup.dto';
 import { PrismaService } from '../database/prisma.service';
 import { HashProvider } from './provider/hash.provider';
+import { LoginDto } from './dto/login.dto';
 
 const userSelectedField = {
   id: true,
@@ -30,5 +31,23 @@ export class AuthService {
       },
       select: userSelectedField,
     });
+  }
+
+  async loginUser(data: LoginDto) {
+    const user = await this.prismaService.user.findUniqueOrThrow({
+      where: {
+        email: data.email,
+      },
+    });
+
+    const isCorrectPassword = await this.hashPasswordProvider.comparePassword(
+      data.password,
+      user.password,
+    );
+
+    if (!isCorrectPassword) {
+      throw new BadRequestException('Creadentials are incorrect');
+    }
+    return user;
   }
 }
