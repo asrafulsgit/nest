@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common'; 
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../database/prisma.service';
 import { PrismaQueryBuilder } from '../common/builders/query-builder';
@@ -69,12 +68,7 @@ export class UsersService {
     },
   ];
 
-  async createUser(data: CreateUserDto) {
-    return await this.prismaService.user.create({
-      data,
-      select: userSelectedField,
-    });
-  }
+  
 
   async getUsers(query: UserQueryDto) {
     const queryBuilder = new PrismaQueryBuilder(query)
@@ -115,7 +109,7 @@ export class UsersService {
     }
     return {
       ...user,
-      name: data.name || user?.name,
+      // name: data.name || user?.name,
     };
   }
 }

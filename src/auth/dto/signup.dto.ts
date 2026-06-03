@@ -1,6 +1,6 @@
 import { IsDefined, IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
-export class CreateUserDto {
+export class SingupDto {
   @IsString({message : "Name should be string"})
   @MinLength(3,{message : "Name field must has 3 characters"})
   @IsNotEmpty({message : "Name is required"}) 
