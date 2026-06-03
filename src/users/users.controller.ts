@@ -8,10 +8,12 @@ import {
   Delete,
   ParseIntPipe,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserQueryDto } from './dto/user-query.dto';
 
 @Controller('users')
 export class UsersController {
@@ -23,8 +25,8 @@ export class UsersController {
   }
 
   @Get()
-  async getAllUsers() {
-    return await this.usersService.getUsers();
+  async getAllUsers(@Query() query: UserQueryDto) {
+    return await this.usersService.getUsers(query);
   }
 
   @Get(':id')

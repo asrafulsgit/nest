@@ -28,7 +28,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-
+    console.log(exception)
     let httpStatus: number = HttpStatus.INTERNAL_SERVER_ERROR;
     let timestamp: string = new Date().toLocaleString();
     let path: string = httpAdapter.getRequestUrl(ctx.getRequest());

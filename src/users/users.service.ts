@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../database/prisma.service';
+import { PrismaQueryBuilder } from '../common/builders/query-builder';
+import { UserQueryDto } from './dto/user-query.dto';
 
 type UserRole = 'admin' | 'user' | 'moderator';
 
@@ -74,10 +76,26 @@ export class UsersService {
     });
   }
 
-  async getUsers() {
-    return await this.prismaService.user.findMany({
+  async getUsers(query: UserQueryDto) {
+    const queryBuilder = new PrismaQueryBuilder(query)
+      .search(['name', 'email'])
+      .filter()
+      .pagination()
+      .sort();
+    const builtQueries = queryBuilder.build();
+    const users = await this.prismaService.user.findMany({
+      ...builtQueries,
       select: userSelectedField,
     });
+
+    const total = await this.prismaService.user.count({
+      where: builtQueries.where,
+    });
+
+    return {
+      data: users,
+      meta: queryBuilder.getPaginationMeta(total),
+    };
   }
 
   async getSingleUser(id: string) {

@@ -9,6 +9,7 @@ import appConfig from './config/app.config';
 import { PrismaModule } from './database/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './filters/filters.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AllExceptionsFilter } from './filters/filters.filter';
       envFilePath: ['.env', `.env.${process.env.NODE_ENV || 'development'}`],
       load: [appConfig],
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService,
