@@ -10,6 +10,7 @@ import { PrismaModule } from './database/prisma.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './filters/filters.filter';
 import { AuthModule } from './auth/auth.module';
+import cookieConfig from './config/cookie.config';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
       validate,
       envFilePath: ['.env', `.env.${process.env.NODE_ENV || 'development'}`],
-      load: [appConfig],
+      load: [appConfig,cookieConfig],
     }),
     AuthModule,
   ],

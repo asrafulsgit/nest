@@ -7,8 +7,8 @@ export class CookieService {
   constructor(private config: ConfigService) {}
 
   setAccessToken(res: Response, token: string) {
-    const { name, options } = this.config.get('cookie.accessToken');
-    res.cookie(name, token, options);
+    const accessToken = this.config.get('cookie.accessToken');
+    res.cookie(accessToken.name, token, accessToken.options);
   }
 
   setRefreshToken(res: Response, token: string) {

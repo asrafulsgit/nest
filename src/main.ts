@@ -11,9 +11,16 @@ async function bootstrap() {
   const port = config.get<number>('app.port');
   const apiPrefix = config.get<string>('app.apiPrefix');
   const cookieSecret = config.get<string>('app.cookieSecret');
+  const clientUrl = config.get<string>('app.clientUrl');
 
   app.use(cookieParser(cookieSecret));
   app.setGlobalPrefix(apiPrefix || '/api/v1');
+
+  app.enableCors({
+    origin: clientUrl,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({

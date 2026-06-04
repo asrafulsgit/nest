@@ -10,5 +10,6 @@ export default registerAs('app', () => ({
   jwtAccessTokenExpires: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
   jwtRefreshTokenSercret: process.env.JWT_REFRESH_TOKEN_SECRET,
   jwtRefreshTokenExpires: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES),
-  cookieSecret : process.env.COOKIE_SECRET
+  cookieSecret : process.env.COOKIE_SECRET,
+  clientUrl : process.env.CLIENT_URL
 }));
