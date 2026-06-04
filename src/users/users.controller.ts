@@ -1,19 +1,9 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-  ValidationPipe,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
-import { UsersService } from './users.service';  
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { UsersService } from './users.service';
 import { UserQueryDto } from './dto/user-query.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { RolesGuard } from '../guards/roles.guard';
+import { Role, Roles } from '../decoretors/roles.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +16,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.USER)
   getSingleUser(@Param('id') id: string) {
     return this.usersService.getSingleUser(id);
   }
