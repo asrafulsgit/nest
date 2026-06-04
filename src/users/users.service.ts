@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'; 
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../database/prisma.service';
 import { PrismaQueryBuilder } from '../common/builders/query-builder';
-import { UserQueryDto } from './dto/user-query.dto';
+import { UserQueryDto } from './dto/user-query.dto'; 
 
 type UserRole = 'admin' | 'user' | 'moderator';
 
@@ -69,7 +69,6 @@ export class UsersService {
   ];
 
   
-
   async getUsers(query: UserQueryDto) {
     const queryBuilder = new PrismaQueryBuilder(query)
       .search(['name', 'email'])

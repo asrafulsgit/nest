@@ -9,16 +9,18 @@ import {
   ParseIntPipe,
   ValidationPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service'; 
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersService } from './users.service';  
 import { UserQueryDto } from './dto/user-query.dto';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @UseGuards(AuthGuard)
   async getAllUsers(@Query() query: UserQueryDto) {
     return await this.usersService.getUsers(query);
   }
