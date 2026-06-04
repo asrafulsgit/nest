@@ -8,4 +8,7 @@ export default registerAs('app', () => ({
   hashSalt: Number(process.env.HASH_SALT),
   jwtAccessTokenSercret: process.env.JWT_ACCESS_TOKEN_SECRET,
   jwtAccessTokenExpires: Number(process.env.JWT_ACCESS_TOKEN_EXPIRES),
+  jwtRefreshTokenSercret: process.env.JWT_REFRESH_TOKEN_SECRET,
+  jwtRefreshTokenExpires: Number(process.env.JWT_REFRESH_TOKEN_EXPIRES),
+  cookieSecret : process.env.COOKIE_SECRET
 }));

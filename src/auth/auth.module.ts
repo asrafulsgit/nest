@@ -5,6 +5,7 @@ import { HashProvider } from './provider/hash.provider';
 import { BrcyptProvider } from './provider/brcypt.provider';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CookieService } from './cookie.service';
 
 @Module({
   controllers: [AuthController],
@@ -14,6 +15,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       provide: HashProvider,
       useClass: BrcyptProvider,
     },
+    CookieService,
   ],
   imports: [
     JwtModule.registerAsync({
